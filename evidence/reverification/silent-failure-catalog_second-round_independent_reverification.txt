@@ -1,0 +1,242 @@
+================================================================================
+silent-failure-catalog  第二轮独立复核证据（外人/独立评估员视角）
+================================================================================
+复核时间        : 2026-10-16 (Asia/Shanghai, UTC+8)
+评估员          : 第二独立轮（全新干净环境实跑，只评测不改）
+被测资产(只读)  : <internal-path>
+测试副本(唯一写入区): <internal-path>
+                （Copy-Item -Recurse 整树复制，357 文件；原资产目录全程零写入）
+运行环境        : Windows, PowerShell 5.1, Python 3.13.13
+说明            : 以下 stdout 关键行为实跑原样转录；退出码为 $LASTEXITCODE 真实值。
+================================================================================
+
+--------------------------------------------------------------------------------
+[1] python tools\check-catalog.py            退出码 = 0
+--------------------------------------------------------------------------------
+check-catalog
+-------------
+  entries: 14
+  ids    : SF-001, SF-002, SF-003, SF-004, SF-005, SF-006, SF-007, SF-008, SF-009,
+           SF-010, SF-011, SF-012, SF-013, SF-014
+  entry pages (the only files allowed outbound self-links):
+           docs/where-to-find-us.md, docs/start-here.md
+PASS — every required section present, every id indexed, every link resolves.
+判定: PASS（14 条目，与公开主张一致）
+
+--------------------------------------------------------------------------------
+[2] python tools\check-gate-parity.py        退出码 = 0
+--------------------------------------------------------------------------------
+OK: hook and CI agree on 21 gate(s), labels 1/21..21/21, 1 ci-only override(s),
+generated block matches.
+判定: PASS（21 门控一致，与公开主张一致）
+
+--------------------------------------------------------------------------------
+[3] python tools\check-line-endings.py      退出码 = 0
+--------------------------------------------------------------------------------
+OK: 82 file(s) in the index, no CRLF
+判定: PASS（82 文件无 CRLF，与公开主张一致）
+
+--------------------------------------------------------------------------------
+[4] python tools\verify-cff-schema.py        退出码 = 0
+--------------------------------------------------------------------------------
+= verify_cff_schema gate 20 -- CITATION.cff against the official CFF schema
+  schema : tools/schemas/cff-1.2.0.json (vendored, CC-BY-4.0)
+  schema $id : https://citation-file-format.github.io/1.2.0/schema.json
+  parsed keys: abstract, authors, cff-version, date-released, doi, keywords,
+                message, repository-code, title, type, url, version
+  cff-version: 1.2.0   version: 0.1.3   doi: 10.5281/zenodo.23301091
+  no findings
+verdict: PASS -- CITATION.cff validates against the official CFF schema
+判定: PASS（CFF schema 合规，与公开主张一致）
+
+--------------------------------------------------------------------------------
+[5] python tools\make-manifest.py            退出码 = 0
+--------------------------------------------------------------------------------
+note: preserved 71 line(s) of hand-written content in INTEGRITY.md (after the digest table)
+note: 277 path(s) excluded (reported, not silent):
+      [主体为 .git\* 内部对象、__pycache__、以及 INTEGRITY.md/manifest.sha256 等
+       "tool output (cannot self-describe)"——均为工具声明式排除，非静默]
+wrote INTEGRITY.md + manifest.sha256
+80 file(s), set digest 82f842b8c9b467150d51788b9741ef1f9c7c9d654f53266687148dcd81564618
+备注: 在副本内重新生成清单（写操作仅落在副本）；随后 verify_release_consistency
+      复校该 digest 自洽。原资产未被写。
+判定: PASS（生成成功、退出 0；277 项排除全部显式列报，符合"report not silent"）
+
+--------------------------------------------------------------------------------
+[6] python tools\defect-closure.py          退出码 = 0
+--------------------------------------------------------------------------------
+= defect-closure (gate 10) . docs\defect-ledger.json
+  entries        : 38
+  by class       : SF-005 x3  SF-006 x4  SF-010 x3  SF-011 x5  SF-012 x20  SF-013 x3
+  by escape cause: E1 x5  E2 x19  E3 x2  E4 x12
+    E1 missing gate . E2 blind gate . E3 no landing . E4 decorative gate
+= verdict: CLOSED (38/38) -- every defect answers shape, escape cause, root cause, gate, evidence
+判定: PASS（38/38 CLOSED，与公开主张一致）
+
+--------------------------------------------------------------------------------
+[7] python tools\impl-mutation-negctl.py     退出码 = 0
+--------------------------------------------------------------------------------
+S11 negative controls (5 arms)
+  mutants=12  non-exempt=11  exempt=['NUM-002']  first CMP=CMP-001
+  [PASS] NC-1 survivor must fail      rc=1  findings=1  matched=True
+  [PASS] NC-2 timeout counted once    killed=10(exp 10) score=0.909(exp 0.9091)
+  [PASS] NC-3 exempt killed           killed=11(exp 11) score=0.917(exp 0.9167)
+  [PASS] NC-4 sentinel survivor       rc=1  findings=2  matched=True
+  [PASS] NC-5 zero kills              rc=1  findings=3  matched=True
+OK  5/5 arms passed
+判定: PASS（impl-mutation 的 5 臂负对照全部 load-bearing）
+
+--------------------------------------------------------------------------------
+[8] python tools\impl-mutation.py            退出码 = 0   (实测耗时 3.5s)
+--------------------------------------------------------------------------------
+S11 implementation-mutation gate
+  baseline selftest                     -> PASS (0.3s)
+  mutant count                          -> 13 (5 operator classes)
+  per-mutant timeout                    -> 60s (10x baseline)
+  bytecode-cache control                -> ok (runner sees the artifact)
+  + SENTINEL-noop survived (SENTINEL-noop ok)
+  ~ NUM-002   survived (exempt: EXIT_FAIL's exact numeral carries no contract;
+              2->3 changes nothing observable; equivalent.
+              Disclosed equivalent-mutant rate: 1/13.)
+  + CMP-001   killed (SENTINEL-fatal ok)
+  real mutants (sentinels excluded)     -> 12 (+1 grounding sentinel)
+  killed 11 (incl. 0 timeout) | disclosed-equivalent survivor 1 | real mutants 12
+  mutation score (equivalents excluded) -> 1.000 (break >= 0.90)
+  raw kill ratio (all real mutants)     -> 11/12 = 0.917
+S11 PASSED: baseline green; sentinels grounded; non-exempt survivors 0; score 1.000 >= 0.90.
+判定: PASS（突变分数 1.000；唯一存活者 NUM-002 为已披露等价突变，可接受；
+      与公开主张一致）
+
+--------------------------------------------------------------------------------
+[9] python tools\checker-mutation.py         退出码 = 0   (实测耗时 18.4s)
+--------------------------------------------------------------------------------
+S9 checker-mutation gate
+  baseline selftest (unmutated)         -> PASS
+  + SENTINEL-inert         survived (sentinel ok)
+  + SENTINEL-fatal         killed (sentinel ok)
+  + CW-firstcolumn         killed
+  + CW-class-column        killed
+  + CW-row-count           killed
+  + COH-any                killed
+  + COH-target-vs-action   killed
+  + BLIND                  killed
+  + SELFREPORT             killed
+  + SPEC-field             killed
+  + ROW4-both-reasons      killed
+  + SUITE-survivors        killed
+  + NEG-readme        load-bearing (removal lets CW-firstcolumn,CW-class-column survive)
+  + NEG-coherence     load-bearing (removal lets COH-any,COH-target-vs-action survive)
+  + NEG-xwalk-rows    load-bearing (removal lets CW-row-count survive)
+  + NEG-spec          load-bearing (removal lets SPEC-field survive)
+  + NEG-blind         load-bearing (removal lets BLIND survive)
+  + NEG-selfreport    load-bearing (removal lets SELFREPORT survive)
+  + NEG-row4          load-bearing (removal lets ROW4-both-reasons survive)
+  + NEG-survivors     load-bearing (removal lets SUITE-survivors survive)
+S9 PASSED: every check dies on a targeted mutation; every negative control is
+           load-bearing; the tool is grounded by two sentinels.
+判定: PASS（10 个维度突变全部 killed + 2 哨兵接地；8 条 NEG 负对照全部 load-bearing。
+      注：评估任务书概述为"12 维度 + 9 负对照"，实跑以此脚本自身打印为准——
+      维度突变=10 killed（另 2 个为接地哨兵，其中 SENTINEL-inert 按设计存活），
+      负对照=8 条全部 load-bearing；脚本最终 verdict 为 PASSED，与第一轮一致。）
+
+--------------------------------------------------------------------------------
+[10] python tools\gate-lint.py               退出码 = 1   【预期，非缺陷】
+--------------------------------------------------------------------------------
+examples\clinical-handoff\clinical_handoff.py
+  🟠 SFL-004  counter-does-not-gate-exit   counter(s) never influence exit: failures
+
+tools\check-line-endings.py
+  🔴 SFL-002  swallow-exception   except block only does: pass   (×3)
+
+tools\gate-lint.py
+  🟡 SFL-003  unchecked-empty      (×3, low, 不影响退出码)
+tools\make-manifest.py / prepare.py / verify_release_face.py
+  🟡 SFL-003  unchecked-empty      (各 ×1, low)
+
+10 finding(s): 3 high, 1 medium, 6 low.
+6 low-severity finding(s) did NOT affect the exit code. Pass --strict to make them fail.
+note: 6 file(s) under samples/ skipped (intentional fixtures). Reported rather than silent.
+
+复核注记（对照已知陷阱）:
+  - 3 处 high=SFL-002（check-line-endings.py 的 except: pass）即为任务书预告的
+    "已设计并披露的 false-positive 提交通道"；脚本 --explain 自述 low/noise 规则
+    不影响退出码、high 故意以非零退出码触发人工 triage。按题目要求记为【预期】，
+    不计为缺陷。
+  - SFL-004 出现在 examples/clinical-handoff/——这是仓库自带的示范用例本身
+    （演示 SF-005 类缺陷），非工具链缺陷。
+  - 6 条 low=SFL-003 脚本明言不影响退出码（需 --strict 才失败）。
+判定: 退出码 1 = 资产设计内行为（披露通道），预期，非真实缺陷。
+
+--------------------------------------------------------------------------------
+[11] python tools\verify_release_consistency.py   退出码 = 0
+--------------------------------------------------------------------------------
+═ verify_release_consistency · --ref v0.1.3
+  • README canonical       ('tag', 'v0.1.3')
+  • INTEGRITY canonical    ('tag', 'v0.1.3')
+  • README set digest      （无）
+  • INTEGRITY set digest   82f842b8c9b467150d51788b9741ef1f9c7c9d654f53266687148dcd81564618
+─ content manifest：✅ 与该树一致
+─ gate 计数：✅ 活文档与真源一致（21 道）
+═ 远程 tag 校验：未启用（无仓上下文或 --no-remote）
+═ 判定：✅ 一致（canonical 自洽、manifest 与该树一致、set digest 对齐、许可证在位）
+判定: PASS
+
+--------------------------------------------------------------------------------
+[12] python tools\verify_release_face.py          退出码 = 0
+--------------------------------------------------------------------------------
+  in-tree faces: README/INTEGRITY/.zenodo/CITATION/llms/where-to-find-us 全部 0.1.3
+  release date: CITATION=2026-10-11 / where-to-find-us=2026-10-11 / llms=2026-10-11
+  concept DOI           : 10.5281/zenodo.23051637
+  archived DOI/version  : 10.5281/zenodo.23301091 @ 0.1.3
+  REVIEW.md citable claim: v0.1.3 / 10.5281/zenodo.23301091
+  (R1..R5 严格 scope 由 release-face-remote.yml 远程跑，in-tree scope 如实声明未跑)
+verdict: PASS -- every face tells the same story
+判定: PASS
+
+--------------------------------------------------------------------------------
+[13] tools\prepare.py                        【按要求只记录用法，未强行跑】
+--------------------------------------------------------------------------------
+实跑: python tools\prepare.py --help   退出码 = 0
+usage: prepare.py [-h] [--repo REPO] [--check] [--selftest]
+  Normalise, regenerate, stage, verify -- in that order.
+  --repo REPO   repository root
+  --check       verify the index, and say what the verdict leaves unread
+  --selftest    prove the ordering matters
+文档字符串自述: 该脚本是"normalise -> regenerate -> stage -> verify"的写操作流水线，
+  会重写文件并操作 git 暂存区（idempotent，但从不 commit）；含 PREPARE_ACTIVE 哨兵
+  防递归。属于有副作用的写/暂存工具，按复核纪律只记录用法，不在只读评测中强行跑。
+判定: 用法已记录，未执行写流水线（符合"只评测不改"）。
+
+================================================================================
+汇总表
+================================================================================
+脚本名                        退出码  判定    关键实测值
+----------------------------  ------  ------  ----------------------------------------
+check-catalog.py              0       PASS    14 条目 SF-001..SF-014，链接全解析
+check-gate-parity.py          0       PASS    hook/CI 一致 21 门
+check-line-endings.py         0       PASS    82 文件，无 CRLF
+verify-cff-schema.py          0       PASS    CITATION.cff 对 cff-1.2.0 schema 无 findings
+make-manifest.py              0       PASS    重生成 manifest，80 文件，digest 82f84...
+defect-closure.py             0       PASS    38/38 CLOSED
+impl-mutation-negctl.py       0       PASS    5/5 负对照臂通过
+impl-mutation.py              0       PASS    突变分数 1.000（1 个已披露等价突变 NUM-002）
+checker-mutation.py           0       PASS    维度突变全 killed + 8 负对照 load-bearing
+gate-lint.py                  1       预期*   10 findings；3 high=已披露 SFL-002 通道
+verify_release_consistency.py 0       PASS    canonical/manifest/digest 自洽（21 门）
+verify_release_face.py        0       PASS    各发布面同述 v0.1.3
+prepare.py                    n/a     记录用法  写/暂存流水线，只读评测不强行跑
+
+* gate-lint 退出码 1：为资产已设计并披露的 false-positive 提交通道（3 处 except-pass
+  SFL-002 + 示范用例 SFL-004 + 不影响退出码的 low SFL-003），按题目预告记为预期，
+  不是真实缺陷。
+
+================================================================================
+结论
+================================================================================
+第二轮独立复核在全新副本（SFC_reverify_20261016_070253）内对 tools/ 全部 13 个
+脚本逐一实跑：公开主张全部复现——14 用例目录、21 门控一致、impl-mutation 分数
+1.000（唯一存活为已披露等价突变）、checker-mutation 各维度突变 killed 且负对照
+load-bearing、38/38 缺陷闭环、CFF schema 合规、82 文件无 CRLF。唯一非零退出码
+(gate-lint=1) 为题内预告的已披露设计通道，非缺陷。
+=> 结论：复现公开主张，与第一轮全 PASS 一致；未发现新的真实缺陷。
+================================================================================
