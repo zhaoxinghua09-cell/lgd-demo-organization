@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LGD — AI Autonomy × Pluggability (Public Demo)</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%231f5d8c'/%3E%3Cpath d='M6 10h20M6 16h20M6 22h20' stroke='%23ffffff' stroke-width='2'/%3E%3C/svg%3E">
+<style>
+  :root{
+    --paper:#f4f6f8; --surface:#ffffff;
+    --ink:#222a31; --muted:#5a6670; --faint:#8b96a0;
+    --line:#d7dee4; --codebg:#ecf0f3;
+    --accent:#1f5d8c; --accent-deep:#173f5d;
+    --ok:#2c7a57; --ok-soft:#e4efe9;
+    --warn:#96691a; --warn-soft:#f2ebda;
+    --sans:"Segoe UI","Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+    --mono:"Cascadia Mono",Consolas,"Courier New",monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1060px;margin:0 auto;padding:0 18px;min-width:0}
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  code,pre{font-family:var(--mono)}
+  p code,li code,td code{background:var(--codebg);padding:1px 5px;border-radius:2px;font-size:.9em}
+  pre{background:var(--codebg);border:1px solid var(--line);border-radius:3px;padding:12px 14px;overflow-x:auto;font-size:12.5px;line-height:1.55}
+
+  /* ===== top bar ===== */
+  .topbar{border-bottom:1px solid var(--line);background:var(--surface)}
+  .topbar .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding-top:8px;padding-bottom:8px}
+  .brand{display:flex;align-items:center;gap:9px;font-weight:600;font-size:14px}
+  .nav{display:flex;gap:2px;flex-wrap:wrap}
+  .nav a{display:inline-block;padding:10px 9px;font-size:13.5px;color:var(--muted)}
+  .nav a:hover{color:var(--accent);text-decoration:none}
+  .ctl{display:flex;align-items:center;gap:10px}
+  .zh-toggle{display:inline-flex;align-items:center;gap:8px;min-height:44px;cursor:pointer;font-size:13.5px;color:var(--ink)}
+  .zh-toggle input{width:19px;height:19px;accent-color:var(--accent)}
+
+  /* ===== hero ===== */
+  .hero{padding:44px 0 36px}
+  h1{font-size:clamp(27px,6vw,44px);line-height:1.18;letter-spacing:-.01em;margin-bottom:16px;font-weight:700}
+  .hero .lede{font-size:15.5px;color:var(--muted);max-width:68ch;margin-bottom:26px}
+  .hero .lede b{color:var(--ink)}
+  .laws{display:grid;grid-template-columns:1fr;gap:10px}
+  @media(min-width:640px){.laws{grid-template-columns:repeat(3,1fr)}}
+  .law{border:1px solid var(--line);background:var(--surface);padding:16px 16px 14px}
+  .law h3{font-size:14px;letter-spacing:.03em;color:var(--accent);margin-bottom:6px}
+  .law p{font-size:13.5px;color:var(--muted);line-height:1.55}
+  .herostats{display:flex;flex-wrap:wrap;gap:8px 22px;margin-top:24px;font-size:13.5px;color:var(--muted)}
+  .herostats b{color:var(--ink)}
+  @media (prefers-reduced-motion:no-preference){
+    .law{animation:fadeup .5s ease both}
+    .law:nth-child(2){animation-delay:.12s}
+    .law:nth-child(3){animation-delay:.24s}
+    @keyframes fadeup{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  }
+
+  /* ===== sections ===== */
+  section{padding:38px 0;border-top:1px solid var(--line)}
+  h2{font-size:clamp(20px,3.6vw,28px);margin-bottom:8px;letter-spacing:-.01em}
+  .sec-sub{color:var(--muted);max-width:68ch;font-size:14.5px;margin-bottom:22px}
+
+  /* ===== loop ===== */
+  .loopgrid{display:grid;grid-template-columns:1fr;gap:14px}
+  @media(min-width:860px){.loopgrid{grid-template-columns:290px 1fr;gap:18px;align-items:start}}
+  .steps{display:grid;gap:8px}
+  .stepbtn{display:flex;align-items:center;gap:10px;width:100%;min-height:48px;text-align:left;
+    border:1px solid var(--line);background:var(--surface);padding:10px 13px;cursor:pointer;
+    font-size:14px;color:var(--muted);font-family:var(--sans)}
+  .stepbtn .n{flex:none;width:24px;height:24px;border-radius:50%;background:var(--codebg);color:var(--muted);
+    display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:700}
+  .stepbtn:hover{border-color:var(--accent)}
+  .stepbtn.active{border-color:var(--accent);color:var(--ink);background:#eef4f9}
+  .stepbtn.active .n{background:var(--accent);color:#fff}
+  .pane{display:none;border:1px solid var(--line);background:var(--surface);padding:20px;min-width:0}
+  .pane.active{display:block}
+  .pane h3{font-size:16px;margin-bottom:8px}
+  .pane .tag{display:inline-block;font-size:11.5px;font-weight:700;letter-spacing:.05em;padding:3px 9px;margin-bottom:12px}
+  .tag.before{background:var(--warn-soft);color:var(--warn)}
+  .tag.read{background:#e7eef4;color:var(--accent)}
+  .tag.write{background:#e7eef4;color:var(--accent)}
+  .tag.scan{background:var(--ok-soft);color:var(--ok)}
+  .tag.reg{background:var(--ok-soft);color:var(--ok)}
+  .pane p{font-size:14px;color:var(--muted);margin-bottom:12px;max-width:66ch}
+  .pane p b{color:var(--ink)}
+  .pane pre{margin:6px 0 10px;white-space:pre-wrap}
+  .gloss{font-size:13px;color:var(--faint)}
+  .zhq-label{font-size:11.5px;letter-spacing:.08em;color:var(--faint);margin:10px 0 4px;text-transform:uppercase}
+  body.zh-off .zhq, body.zh-off .zhq-label{display:none}
+
+  /* ===== pluggability ===== */
+  .layers{display:grid;grid-template-columns:1fr;gap:8px;margin:18px 0}
+  @media(min-width:760px){.layers{grid-template-columns:repeat(5,1fr);gap:8px}}
+  .layer{border:1px solid var(--line);background:var(--surface);padding:14px;transition:opacity .2s}
+  .layer .lh{font-size:11px;font-weight:700;letter-spacing:.06em;color:var(--accent);margin-bottom:6px}
+  .layer h4{font-size:13.5px;margin-bottom:5px}
+  .layer p{font-size:12.5px;color:var(--muted);line-height:1.5}
+  body.plugged-out .layer.l-reg{opacity:.35}
+  .plugbar{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin:18px 0 10px}
+  .sw-wrap{display:inline-flex;align-items:center;gap:10px;min-height:44px;cursor:pointer;font-size:14px;font-weight:600}
+  .sw-wrap input{position:absolute;opacity:0;width:19px;height:19px}
+  .sw{flex:none;width:46px;height:26px;border:1px solid var(--line);border-radius:13px;background:var(--codebg);position:relative;transition:background .2s}
+  .sw::after{content:"";position:absolute;top:2px;left:2px;width:20px;height:20px;border-radius:50%;background:#fff;border:1px solid var(--line)}
+  .sw-wrap input:checked + .sw{background:var(--accent);border-color:var(--accent)}
+  .sw-wrap input:checked + .sw::after{left:22px}
+  #plugStatus{font-size:14px;color:var(--muted)}
+  #plugStatus b{color:var(--ink)}
+  .regwrap{overflow-x:auto;margin-top:10px;border:1px solid var(--line);background:var(--surface)}
+  .regtable{width:100%;min-width:560px;border-collapse:collapse;background:var(--surface);font-size:13px;table-layout:fixed}
+  .regtable th,.regtable td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top;word-break:break-all}
+  .regtable th{color:var(--muted);font-weight:600;font-size:12px}
+  .regtable tr:last-child td{border-bottom:none}
+  body.plugged-out #regRow td{opacity:.5;text-decoration:line-through}
+  .plug-note{font-size:13px;color:var(--faint);margin-top:12px;max-width:66ch}
+
+  /* ===== reproduce ===== */
+  .steps3{list-style:none;display:grid;grid-template-columns:1fr;gap:10px;margin:16px 0}
+  @media(min-width:760px){.steps3{grid-template-columns:repeat(3,1fr)}}
+  .steps3 li{border:1px solid var(--line);background:var(--surface);padding:14px 16px;font-size:14px;color:var(--muted)}
+  .steps3 b{display:block;color:var(--ink);margin-bottom:4px;font-size:14px}
+  .steps3 code{font-size:12px}
+  .term{white-space:pre-wrap;font-size:12.5px}
+  .term .p{color:var(--ok)}
+  .term .s{color:var(--warn)}
+  .term .dim{color:var(--faint)}
+  .gitelink{display:inline-block;margin-top:14px;border:1px solid var(--accent);background:var(--surface);color:var(--accent);padding:11px 20px;font-size:14px;font-weight:600}
+  .gitelink:hover{background:#eef4f9;text-decoration:none}
+
+  /* ===== badges ===== */
+  .badges{display:grid;grid-template-columns:1fr;gap:14px}
+  @media(min-width:760px){.badges{grid-template-columns:repeat(2,1fr)}}
+  .badgecard{border:1px solid var(--line);background:var(--surface);padding:20px;min-width:0}
+  .badgecard .bid{font-size:12px;font-weight:700;letter-spacing:.08em;color:var(--accent);margin-bottom:6px}
+  .badgecard h3{font-size:17px;margin-bottom:3px;word-break:break-all}
+  .badgecard .lvl{font-size:12.5px;color:var(--faint);margin-bottom:12px}
+  .badgecard ul{list-style:none;margin-bottom:6px}
+  .badgecard li{font-size:13.5px;color:var(--muted);padding:4px 0 4px 16px;position:relative}
+  .badgecard li::before{content:"";position:absolute;left:0;top:11px;width:6px;height:6px;background:var(--ok)}
+  .badgecard li b{color:var(--ink)}
+  .badgecard pre{margin:8px 0;white-space:pre-wrap}
+  .evpath{font-size:12px;color:var(--muted);margin-top:8px;word-break:break-all}
+  .caliber{font-size:13.5px;color:var(--muted);max-width:68ch;margin-top:16px}
+  details{border:1px solid var(--line);background:var(--surface);margin-top:18px}
+  details summary{cursor:pointer;padding:12px 14px;font-size:13.5px;font-weight:600;min-height:44px;display:flex;align-items:center}
+  details pre{border:none;border-top:1px solid var(--line);background:var(--codebg);white-space:pre-wrap;margin:0;font-size:12px}
+
+  footer{padding:30px 0 56px;border-top:1px solid var(--line);font-size:13px;color:var(--muted)}
+  footer p{max-width:68ch}
+</style>
+</head>
+<body>
+
+<!-- ===== top bar ===== -->
+<div class="topbar">
+  <div class="wrap">
+    <div class="brand">
+      <svg width="20" height="20" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" fill="#1f5d8c"/><path d="M6 10h20M6 16h20M6 22h20" stroke="#ffffff" stroke-width="2"/></svg>
+      LGD Public Demo
+    </div>
+    <nav class="nav" aria-label="Sections">
+      <a href="#loop">Autonomy loop</a>
+      <a href="#plug">Pluggability</a>
+      <a href="#repro">Reproduce</a>
+      <a href="#badges">Badges</a>
+    </nav>
+    <label class="zh-toggle" title="Show or hide the original Chinese evidence quotes">
+      <input type="checkbox" id="zhToggle" checked> 中文对照
+    </label>
+  </div>
+</div>
+
+<!-- ===== 1. HERO ===== -->
+<header class="hero">
+  <div class="wrap">
+    <h1>AI Autonomy <span style="color:var(--accent)">×</span> Pluggability</h1>
+    <p class="lede">
+      One real skill package — <b>verified-agent-identity</b> — went from “frontmatter only, an AI does
+      not know how to call it” to a gate-passed, registry-indexed, independently certified asset.
+      An AI agent closed the loop in five autonomous steps. Every number on this page is copied
+      verbatim from archived evidence measured on 2026-10-16; nothing is estimated or rewritten.
+    </p>
+    <div class="laws">
+      <div class="law">
+        <h3>Registry</h3>
+        <p>Every skill package is registered before an agent may call it. The public registry is a flat index — ID, skill, line, AI Protocol, Executable — 113 rows, SK-001 to SK-113.</p>
+      </div>
+      <div class="law">
+        <h3>Evidence</h3>
+        <p>Every claim traces to an archived, read-only artifact: an evaluation report, a scan output, or a registry row. Quotes on this page are verbatim; translations are marked as glosses.</p>
+      </div>
+      <div class="law">
+        <h3>Gates</h3>
+        <p>A scanner script decides readiness — not an opinion. No S1 finding means PASS; any S1 means FIX_REQUIRED. The same gate runs before registration and after every fix.</p>
+      </div>
+    </div>
+    <div class="herostats">
+      <span>Registry: <b>113 rows</b> (SK-001..SK-113)</span>
+      <span>Gate scan: <b>verdict PASS</b>, findings - none</span>
+      <span>run_verify: <b>PASS=9 · FAIL=0 · SKIP=2</b></span>
+      <span>Issued badges: <b>2</b> (LGD-2 full)</span>
+    </div>
+  </div>
+</header>
+
+<!-- ===== 2. AUTONOMY LOOP ===== -->
+<section id="loop">
+  <div class="wrap">
+    <h2>The 5-step autonomy loop</h2>
+    <p class="sec-sub">
+      Click each step. The agent did not rewrite a spec from memory: it read the defect record,
+      verified the real script parameters in read-only mode, wrote the protocol, re-ran the same
+      scanner, and registered the result. Each step shows the archived evidence behind it.
+    </p>
+
+    <div class="loopgrid">
+      <div class="steps" role="tablist" aria-label="Loop steps">
+        <button class="stepbtn active" data-step="1" type="button"><span class="n">1</span> Read the fix instruction</button>
+        <button class="stepbtn" data-step="2" type="button"><span class="n">2</span> Verify scripts/ (read-only)</button>
+        <button class="stepbtn" data-step="3" type="button"><span class="n">3</span> Write the call protocol</button>
+        <button class="stepbtn" data-step="4" type="button"><span class="n">4</span> Re-run the gate scan</button>
+        <button class="stepbtn" data-step="5" type="button"><span class="n">5</span> Register and leave trace</button>
+      </div>
+
+      <div>
+        <div class="pane active" data-pane="1">
+          <span class="tag before">BEFORE · DEFECT VAI-003 (S2)</span>
+          <h3>The defect record the agent read</h3>
+          <p>
+            The archived evaluation logged defect <b>VAI-003 at severity S2</b>: <code>SKILL.md</code>
+            contained valid frontmatter, but the body had no call protocol — an AI could find the
+            skill in the registry yet could not tell how to invoke it. The recorded fix is to append
+            the three protocol sections; the recorded verify is the scanner re-run.
+          </p>
+          <div class="zhq-label">Original evidence (verbatim)</div>
+<pre class="zhq"><code>defect: VAI-003（S2）
+issue: SKILL.md 仅 frontmatter，AI 不知如何调用
+fix: 补齐「何时用/用法/流程」六步调用协议（已完成）
+verify: scan-skills-ai-readiness.py 复扫 0 项发现、verdict PASS
+theory: 静默失败目录 E2（盲门）——缺调用协议 = AI 不可见；协议补齐 = Gates 可见（LGD 律三）</code></pre>
+          <p class="gloss">Gloss: “Issue — SKILL.md had frontmatter only, an AI did not know how to call it. Fix — added the When/Usage/Flow protocol. Verify — scanner re-ran with 0 findings, verdict PASS.”</p>
+        </div>
+
+        <div class="pane" data-pane="2">
+          <span class="tag read">READ-ONLY VERIFICATION</span>
+          <h3>Checking how scripts/ is really invoked</h3>
+          <p>
+            Before writing anything, the agent opened <code>scripts/</code> and confirmed the real
+            invocation form of every script — no invented flags. The skill declares its runtime
+            dependency in frontmatter (<code>metadata.requires.bins: [node]</code>). The agent
+            inspected; it did not modify the scripts.
+          </p>
+          <div class="zhq-label">Original evidence (verbatim, section 用法)</div>
+<pre class="zhq"><code>所有脚本位于技能目录 `scripts/` 下，均从技能目录执行：`node scripts/&lt;脚本名&gt;.js [参数]`。</code></pre>
+          <p class="gloss">Gloss: “All scripts live under scripts/ and are run from the skill directory: node scripts/&lt;script&gt;.js [args].”</p>
+        </div>
+
+        <div class="pane" data-pane="3">
+          <span class="tag write">AUTONOMOUS WRITE</span>
+          <h3>The agent appended three protocol sections</h3>
+          <p>
+            After the frontmatter, the agent appended exactly the three headings the scanner looks
+            for: <code>## 何时用</code>, <code>## 用法</code>, <code>## 流程</code>. Representative
+            verbatim lines from the remediated file:
+          </p>
+          <div class="zhq-label">Original evidence (verbatim, SKILL.md)</div>
+<pre class="zhq"><code>## 何时用
+当 AI 需要向外部证明自己的身份、或需要把 AI 代理与真实的
+人类身份/机构身份建立可验证链接时使用本技能，例如：
+
+## 用法
+所有脚本位于技能目录 `scripts/` 下，均从技能目录执行：
+`node scripts/&lt;脚本名&gt;.js [参数]`。
+
+## 流程
+完整认证闭环按以下顺序执行（验证方视角）：</code></pre>
+          <p class="gloss">Gloss: “When to use — when an AI must prove its identity externally or link to a human/institutional identity. Usage — scripts run from the skill directory. Flow — the full certification loop, verifier’s view.”</p>
+        </div>
+
+        <div class="pane" data-pane="4">
+          <span class="tag scan">GATE SCAN · SAME SCANNER</span>
+          <h3>Re-scan: 0 findings, verdict PASS</h3>
+          <p>
+            The archived scanner’s protocol check searches the body for
+            <code>Usage / 用法 / 调用 / 何时用 / ## 流程 / flow</code>. Finding none, it emits the
+            <b>P1/S2 tuple</b> below. Verdict flips to FIX_REQUIRED only when any S1 exists — P1
+            alone never blocks. The remediated scan wrote the YAML shown below.
+          </p>
+          <div class="zhq-label">Scanner rule (verbatim)</div>
+<pre class="zhq"><code>for kw in ['Usage', '用法', '调用', '何时用', '## 流程', 'flow']:
+    if kw in text:
+        return [], True
+issues.append(('P1', 'protocol',
+    '正文缺调用协议（Usage/用法/流程），AI 不知如何调用', 'S2'))
+
+verdict: {'PASS' if not any(lv=='S1'
+    for _,_,_,lv in all_issues) else 'FIX_REQUIRED'}</code></pre>
+          <div class="zhq-label">Scan output (verbatim, asset path generalized)</div>
+<pre class="zhq"><code># AI Readiness Fix Instructions
+asset: &lt;skills-root&gt;/verified-agent-identity
+scanned: 2026-10-16
+verdict: PASS
+findings:
+- none</code></pre>
+          <p class="gloss">Gloss: “No S1 finding → verdict PASS; findings list is - none; scanned 2026-10-16.”</p>
+        </div>
+
+        <div class="pane" data-pane="5">
+          <span class="tag reg">REGISTRY · TRACE</span>
+          <h3>Registered in the public registry</h3>
+          <p>
+            A plugged-in skill must carry a registry row. <code>verified-agent-identity</code> is
+            row <b>SK-111</b>: <b>AI Protocol = Yes, Executable = Yes</b> — an AI may discover it
+            and may call it. The registry holds 113 sequential rows, SK-001..SK-113, verified by
+            <code>run_verify.py</code>.
+          </p>
+          <div class="zhq-label">Registry header and row (verbatim, registry/skills.md)</div>
+<pre class="zhq"><code>| ID | Skill | Name | Line | AI Protocol | Executable |
+| SK-111 | verified-agent-identity | verified-agent-identity | Regulatory | Yes | Yes |</code></pre>
+          <p class="gloss">Gloss: “Row SK-111 — line: Regulatory; AI-callable: Yes; executable: Yes.”</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 3. PLUGGABILITY ===== -->
+<section id="plug">
+  <div class="wrap">
+    <h2>Pluggability: five layers, one switch</h2>
+    <p class="sec-sub">
+      A skill package plugs into the LGD system through five stacked layers. Use the switch below
+      to unmount <code>verified-agent-identity</code> and watch what changes — the registry row
+      grey out and the state flip to not-AI-callable. Re-mounting requires re-passing the gate.
+    </p>
+
+    <div class="layers">
+      <div class="layer">
+        <div class="lh">Layer 1</div>
+        <h4>frontmatter</h4>
+        <p>Machine-readable header: title, name, description, runtime deps (<code>bins: node</code>). Lets an AI route the skill before reading it.</p>
+      </div>
+      <div class="layer">
+        <div class="lh">Layer 2</div>
+        <h4>protocol layer</h4>
+        <p>Body sections <code>何时用 / 用法 / 流程</code> — when to use it, how to call it, the order of steps.</p>
+      </div>
+      <div class="layer">
+        <div class="lh">Layer 3</div>
+        <h4>scripts/</h4>
+        <p>Executable entry points under <code>scripts/</code>, each with documented CLI form and exit codes.</p>
+      </div>
+      <div class="layer">
+        <div class="lh">Layer 4</div>
+        <h4>gate scan</h4>
+        <p><code>scan-skills-ai-readiness.py</code> — the admission gate: no S1 = PASS, any S1 = FIX_REQUIRED.</p>
+      </div>
+      <div class="layer l-reg">
+        <div class="lh">Layer 5</div>
+        <h4>registry</h4>
+        <p><code>registry/skills.md</code> — one row per mounted skill: ID, line, AI Protocol, Executable.</p>
+      </div>
+    </div>
+
+    <div class="plugbar">
+      <label class="sw-wrap">
+        <input type="checkbox" id="plugToggle" checked>
+        <span class="sw" aria-hidden="true"></span>
+        Mount / Unmount verified-agent-identity
+      </label>
+      <span id="plugStatus"><b>Mounted</b> — SK-111 registered; AI Protocol = Yes, an AI may call it.</span>
+    </div>
+
+    <div class="regwrap">
+    <table class="regtable" aria-label="Registry row state">
+      <colgroup>
+        <col style="width:16%"><col style="width:32%"><col style="width:22%"><col style="width:15%"><col style="width:15%">
+      </colgroup>
+      <thead>
+        <tr><th>ID</th><th>Skill</th><th>Name</th><th>AI Protocol</th><th>Executable</th></tr>
+      </thead>
+      <tbody>
+        <tr id="regRow">
+          <td>SK-111</td>
+          <td>verified-agent-identity</td>
+          <td>verified-agent-identity</td>
+          <td id="protoCell">Yes</td>
+          <td>Yes</td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+    <p class="plug-note">
+      Registry row above is verbatim from <code>registry/skills.md</code>:
+      <code>| SK-111 | verified-agent-identity | verified-agent-identity | Regulatory | Yes | Yes |</code>.
+      Unmounting removes the row from the registry — unregistered means invisible to every agent.
+    </p>
+  </div>
+</section>
+
+<!-- ===== 4. REPRODUCE ===== -->
+<section id="repro">
+  <div class="wrap">
+    <h2>Reproduce it yourself</h2>
+    <p class="sec-sub">
+      No trust required. An outside reader clones the demo repository, runs one read-only Python
+      script, and compares the printed numbers against the archived evidence. Exit code: 0.
+    </p>
+
+    <ol class="steps3">
+      <li><b>1 · Clone</b>
+        <code>git clone https://gitee.com/stevenzhao26/lgd-demo-organization.git</code></li>
+      <li><b>2 · Run</b>
+        <code>cd lgd-demo-organization</code><br>
+        <code>python verify/run_verify.py</code></li>
+      <li><b>3 · Verify</b>
+        Expect the summary line below. SKIP lines are documented boundaries, not failures.</li>
+    </ol>
+
+<pre class="term"><code><span class="dim">==============================================================================</span>
+LGD demo organization - public verification
+repo root: &lt;repo-root&gt;
+<span class="dim">==============================================================================</span>
+<span class="p">[PASS]</span> tool: scan-skills-ai-readiness.py self-check :: compile OK; ran on temp fixture, exit 0, both report files written
+<span class="p">[PASS]</span> registry AI-readiness scan :: archived scanner executed rc=0; evaluated=0; skipped=1 (the registry ships a flat index with no per-skill SKILL.md, so SKIP is the documented behavior for an index-style directory)
+<span class="s">[SKIP]</span> tool: matrix_test.py self-check :: compile OK; node found; but the external verified-agent-identity asset checkout the archived driver targets is not present on this machine. Raw 21/21 output: evidence/evaluations/verified-agent-identity_evaluation_v2.md
+<span class="p">[PASS]</span> registry/skills.md format :: header OK; 113 data rows; IDs SK-001..SK-113 sequential
+<span class="p">[PASS]</span> evidence: evidence\evaluations\silent-failure-catalog_evaluation_v1.md :: 8331 B; 3 certification keywords found
+<span class="p">[PASS]</span> evidence: evidence\evaluations\verified-agent-identity_evaluation_v2.md :: 8354 B; 3 certification keywords found
+<span class="p">[PASS]</span> evidence: evidence\reverification\silent-failure-catalog_second-round_independent_reverification.txt :: 15149 B; 2 certification keywords found
+<span class="p">[PASS]</span> evidence: evidence\tools\scan-skills-ai-readiness.py :: 6580 B; 2 certification keywords found
+<span class="p">[PASS]</span> evidence: evidence\tools\matrix_test.py :: 8014 B; 2 certification keywords found
+<span class="p">[PASS]</span> evidence/ inventory :: 5 files archived: evidence\evaluations\silent-failure-catalog_evaluation_v1.md; evidence\evaluations\verified-agent-identity_evaluation_v2.md; evidence\reverification\silent-failure-catalog_second-round_independent_reverification.txt; evidence\tools\matrix_test.py; evidence\tools\scan-skills-ai-readiness.py
+<span class="s">[SKIP]</span> optional --skills-dir scan :: not provided; the full 113-skill scan needs an external skill collection (see verify/HOW_TO_VERIFY.md)
+<span class="dim">------------------------------------------------------------------------------</span>
+TOTAL: PASS=9  FAIL=0  SKIP=2
+CONCLUSION: All executable checks PASS; SKIP lines are documented boundaries, not failures.</code></pre>
+
+    <a class="gitelink" href="https://gitee.com/stevenzhao26/lgd-demo-organization">Open the demo repository on Gitee</a>
+  </div>
+</section>
+
+<!-- ===== 5. BADGES ===== -->
+<section id="badges">
+  <div class="wrap">
+    <h2>Certification badges</h2>
+    <p class="sec-sub">
+      Two badges, both LGD-2 full certification, both dated 2026-10-16, each backed by an archived
+      evaluation file under <code>evidence/</code>. A badge is recorded only when its file exists.
+    </p>
+
+    <div class="badges">
+      <div class="badgecard">
+        <div class="bid">BDG-0001 · RPT-20261016-VAI</div>
+        <h3>verified-agent-identity</h3>
+        <div class="lvl">LGD-2 full certification · issued 2026-10-16</div>
+        <ul>
+          <li><b>21/21</b> tests PASS; two independent rounds agree</li>
+          <li>Zero <b>S0/S1</b> defects</li>
+          <li>ISO/IEC 25010 eight attributes all pass; theory coverage matrix 8/8 lines PASS</li>
+        </ul>
+        <div class="zhq-label">Verdict (verbatim)</div>
+<pre class="zhq"><code>结论：通过（可发布）
+本报告由【专业评测号】独立评测，依据《Agent 资产专业评测规范 v2.0》
+（ISO/IEC 25010 · IEEE 829 · ISTQB · OWASP Agentic Applications 2026），
+21/21 项测试全部通过，无 S0/S1 缺陷。</code></pre>
+        <p class="evpath">Evidence: <code>evidence/evaluations/verified-agent-identity_evaluation_v2.md</code></p>
+      </div>
+
+      <div class="badgecard">
+        <div class="bid">BDG-0002 · RPT-20261016-SFC</div>
+        <h3>silent-failure-catalog</h3>
+        <div class="lvl">LGD-2 full certification with adversarial mutation testing · issued 2026-10-16</div>
+        <ul>
+          <li>Toolchain <b>10/10</b> checks PASS</li>
+          <li>Second round: <b>12/13</b> scripts exit code 0; the single non-zero (<code>gate-lint</code>=1) is the disclosed expected channel</li>
+          <li>Reproduced: <b>38/38</b> defect closure, mutation score <b>1.000</b>, 21 gates, 14 catalog entries</li>
+        </ul>
+        <div class="zhq-label">Verdict (verbatim)</div>
+<pre class="zhq"><code>结论：通过（可发布）
+本报告由【专业评测号】独立评测，依据《Agent 资产专业评测规范 v2.0》
+（ISO/IEC 25010 · IEEE 829 · ISTQB · OWASP Agentic Applications 2026），
+工具链 10 项评测全部通过，无 S0/S1 缺陷。</code></pre>
+        <p class="evpath">Evidence: <code>evidence/evaluations/silent-failure-catalog_evaluation_v1.md</code> · <code>evidence/reverification/silent-failure-catalog_second-round_independent_reverification.txt</code></p>
+      </div>
+    </div>
+
+    <p class="caliber">
+      Both badges follow the same two-round caliber: an independent second evaluator re-runs
+      everything on a fresh copy, and the badge is recorded only when both rounds agree with zero
+      S0/S1 defects. The rows below are copied verbatim from the badge register.
+    </p>
+
+    <details>
+      <summary>Source rows — gates/badges.md (verbatim)</summary>
+<pre><code>| 2026-10-16 | `verified-agent-identity` | LGD-evaluated text badge; **LGD-2 full certification** | 21/21 tests PASS; two independent rounds agree; zero S0/S1 defects; ISO/IEC 25010 eight attributes all pass; theory coverage matrix 8/8 lines PASS. | `evidence/evaluations/verified-agent-identity_evaluation_v2.md`; driver: `evidence/tools/matrix_test.py` |
+| 2026-10-16 | `silent-failure-catalog` (governance toolchain) | LGD-evaluated text badge; **LGD-2 full certification** with adversarial self-justification (mutation testing) | Toolchain 10/10 checks PASS. Second-round independent reverification reproduced: 12 of 13 scripts exit code 0; the single non-zero exit code (`gate-lint` = 1) is the disclosed expected false-positive channel, not a defect. Reproduced values: 14 catalog entries, 21 gates, 38/38 defect closure, mutation score 1.000 (one disclosed equivalent mutant), 10 dimension mutants killed + 8 load-bearing negative controls. | `evidence/evaluations/silent-failure-catalog_evaluation_v1.md`; `evidence/reverification/silent-failure-catalog_second-round_independent_reverification.txt` |</code></pre>
+    </details>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p>
+      Single self-contained HTML — no external CDN, font, or image dependency; works offline.
+      All numbers and quotes are taken verbatim from archived, read-only evidence files; the only
+      external link on this page is the demo repository:
+      <a href="https://gitee.com/stevenzhao26/lgd-demo-organization">gitee.com/stevenzhao26/lgd-demo-organization</a>.
+      Measured on 2026-10-16.
+    </p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  // ---- loop step switching ----
+  var btns = document.querySelectorAll('.stepbtn');
+  var panes = document.querySelectorAll('.pane');
+  btns.forEach(function(b){
+    b.addEventListener('click', function(){
+      var s = b.getAttribute('data-step');
+      btns.forEach(function(x){ x.classList.toggle('active', x === b); });
+      panes.forEach(function(p){ p.classList.toggle('active', p.getAttribute('data-pane') === s); });
+    });
+  });
+
+  // ---- Chinese quote fold toggle ----
+  var zhToggle = document.getElementById('zhToggle');
+  zhToggle.addEventListener('change', function(){
+    document.body.classList.toggle('zh-off', !zhToggle.checked);
+  });
+
+  // ---- plug / unmount switch ----
+  var plugToggle = document.getElementById('plugToggle');
+  var plugStatus = document.getElementById('plugStatus');
+  plugToggle.addEventListener('change', function(){
+    var out = !plugToggle.checked;
+    document.body.classList.toggle('plugged-out', out);
+    document.getElementById('protoCell').textContent = out ? 'No' : 'Yes';
+    plugStatus.innerHTML = out
+      ? '<b>Unmounted</b> — no registry row; unregistered means invisible to every AI. Re-mounting requires re-passing the gate scan.'
+      : '<b>Mounted</b> — SK-111 registered; AI Protocol = Yes, an AI may call it.';
+  });
+})();
+</script>
+</body>
+</html>

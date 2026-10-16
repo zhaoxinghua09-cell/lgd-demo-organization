@@ -1,0 +1,200 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Dataset",
+  "@id": "https://gitee.com/stevenzhao26/lgd-demo-organization",
+  "name": "LGD AI Autonomy x Pluggability - Evidence Bundle",
+  "description": "Machine-readable evidence for the LGD demo: one real AI-self-remediation closed loop, the pluggable skill-package mechanism, outsider reproduction numbers, and badge issuances. Every number is traced to a repo-relative source file; unverifiable figures are omitted.",
+  "datePublished": "2026-10-16",
+  "version": "1.0.0",
+  "isBasedOn": "https://gitee.com/stevenzhao26/lgd-demo-organization",
+
+  "constitution": {
+    "@type": "CreativeWork",
+    "name": "LGD three-law constitution",
+    "shortForm": [
+      {"law": "Registry", "statement": "Every asset is registered before use."},
+      {"law": "Evidence", "statement": "Every claim carries evidence; evidence files are read-only."},
+      {"law": "Gates", "statement": "Nothing is released before it passes its gate."}
+    ],
+    "sourcePath": "README.md",
+    "verifiedBy": "Read 2026-10-16, section 'Constitution (short form)'."
+  },
+
+  "remediationLoop": {
+    "@type": "Event",
+    "name": "verified-agent-identity self-remediation closed loop",
+    "asset": "verified-agent-identity",
+    "scannedDate": "2026-10-16",
+    "before": {
+      "@type": "CreativeWork",
+      "state": "SKILL.md contained YAML frontmatter only; no body call protocol.",
+      "scannerFinding": {
+        "checkId": "P1",
+        "severity": "S2",
+        "message": "Body missing call protocol (Usage / how-to / flow); an AI does not know how to invoke the skill.",
+        "rule": "check_protocol() searches for Usage / 用法 / 调用 / 何时用 / ## 流程 / flow; zero hits raises P1 at S2."
+      },
+      "sourcePath": "evidence/tools/scan-skills-ai-readiness.py",
+      "verifiedBy": "Read 2026-10-16, function check_protocol()."
+    },
+    "actionSequence": [
+      {"step": 1, "action": "Agent autonomously read the remediation instruction (AI-readable fix instructions in ai_readiness.yaml)."},
+      {"step": 2, "action": "Read-only verification of scripts/ entry points and their real parameters."},
+      {"step": 3, "action": "Appended three protocol sections to SKILL.md: '## 何时用' (when to use), '## 用法' (usage with per-script CLI), '## 流程' (end-to-end flow)."},
+      {"step": 4, "action": "Re-ran the AI-readiness scanner on the same asset directory."},
+      {"step": 5, "action": "Confirmed zero findings and verdict PASS; closed the loop."}
+    ],
+    "documentedScripts": [
+      "createNewEthereumIdentity.js",
+      "manualLinkHumanToAgent.js",
+      "generateChallenge.js",
+      "signChallenge.js",
+      "verifySignature.js",
+      "getIdentities.js"
+    ],
+    "documentedScriptsNote": "Six callable entry points documented in SKILL.md '## 用法'; executed from the skill directory with `node scripts/<name> [args]`.",
+    "after": {
+      "@type": "CreativeWork",
+      "state": "SKILL.md now carries frontmatter plus '## 何时用' / '## 用法' / '## 流程'.",
+      "scanResult": "0 findings",
+      "verdict": "PASS",
+      "radarScores": {
+        "functional": 5.0, "usability": 5.0, "maintainability": 5.0,
+        "portability": 5.0, "security": 5.0, "reliability": 5.0,
+        "compatibility": 5.0, "aiFriendliness": 5.0
+      },
+      "sourcePath": "skills/verified-agent-identity/SKILL.md; skills/verified-agent-identity/ai_readiness.yaml; skills/verified-agent-identity/AI_READINESS_REPORT.md",
+      "verifiedBy": "Read 2026-10-16; ai_readiness.yaml lines 'verdict: PASS' and 'findings: - none'."
+    },
+    "scannerCheckCatalog": [
+      {"checkId": "F1", "severity": "S1", "rule": "File must start with '---' frontmatter delimiter."},
+      {"checkId": "F2", "severity": "S1", "rule": "frontmatter must contain a 'name' field."},
+      {"checkId": "F3", "severity": "S1", "rule": "frontmatter must contain a 'description' field."},
+      {"checkId": "F4", "severity": "S2", "rule": "description length must be >= 30 characters."},
+      {"checkId": "P1", "severity": "S2", "rule": "Body must contain a call protocol (Usage / 用法 / 调用 / 何时用 / ## 流程 / flow)."},
+      {"checkId": "L1", "severity": "S2", "rule": "llms.txt or README.md must exist for AI discoverability."}
+    ],
+    "verdictRule": "verdict = PASS when no S1 finding remains; otherwise FIX_REQUIRED.",
+    "sourcePath": "evidence/tools/scan-skills-ai-readiness.py",
+    "verifiedBy": "Read 2026-10-16, main() verdict logic."
+  },
+
+  "pluggableMechanism": {
+    "@type": "CreativeWork",
+    "name": "Pluggable skill-package standard structure",
+    "layers": [
+      {
+        "layer": "Protocol interface",
+        "files": ["SKILL.md frontmatter", "SKILL.md body sections (何时用 / 用法 / 流程)"],
+        "role": "AI call interface: frontmatter fields (name, description, metadata, homepage) for routing; body protocol sections for invocation."
+      },
+      {
+        "layer": "Executable",
+        "files": ["scripts/*.js or scripts/*.py"],
+        "role": "Runnable entry points with documented CLI parameters."
+      },
+      {
+        "layer": "Registry",
+        "files": ["registry/skills.md"],
+        "role": "Public index: 113 entries SK-001..SK-113; columns ID / Skill / Name / Line / AI Protocol / Executable."
+      },
+      {
+        "layer": "Gate scan",
+        "files": ["evidence/tools/scan-skills-ai-readiness.py"],
+        "role": "Mandatory admission gate: new or changed skills must pass the AI-readiness scan before registration."
+      }
+    ],
+    "registryCounts": {
+      "totalSkills": 113,
+      "idRange": "SK-001..SK-113",
+      "lines": [
+        {"line": "L1 theory", "approx": 12},
+        {"line": "L2 product", "approx": 16},
+        {"line": "L3 evaluation", "approx": 10},
+        {"line": "L4 ecosystem", "approx": 7},
+        {"line": "L5 regulatory", "approx": 14},
+        {"line": "L6 infrastructure", "approx": 54}
+      ],
+      "note": "Line counts are approximate band figures from the registry center; the authoritative total is 113 registry rows."
+    },
+    "agentRoles": {
+      "agentIdRange": "AG-ORG-01..AG-ORG-12",
+      "remediatorRole": "AG-ORG-05 (remediation loop: read fix instruction -> autonomous remediation -> verify -> close)",
+      "note": "Roles are multi-instance; any role can be instantiated more than once."
+    },
+    "sourcePath": "registry/skills.md; README.md; evidence/tools/scan-skills-ai-readiness.py",
+    "verifiedBy": "Read 2026-10-16; run_verify.py registry-format step reported 113 data rows, IDs SK-001..SK-113 sequential."
+  },
+
+  "outsiderReproduction": {
+    "@type": "HowTo",
+    "name": "One-click outsider verification",
+    "repositoryUrl": "https://gitee.com/stevenzhao26/lgd-demo-organization",
+    "steps": [
+      "Clone the repository to a fresh directory.",
+      "Prepare Python 3.9+ (standard library only; no pip install). Node.js is optional.",
+      "Run: python verify/run_verify.py",
+      "Read the printed PASS / FAIL / SKIP table and cross-check numbers against source documents."
+    ],
+    "measuredOutput": {
+      "measuredOn": "2026-10-16",
+      "environment": "Windows, PowerShell 5.1, Python 3.13.13",
+      "PASS": 9,
+      "FAIL": 0,
+      "SKIP": 2,
+      "conclusion": "All executable checks PASS; SKIP lines are documented boundaries, not failures.",
+      "skipReasons": [
+        "matrix_test.py self-check: external verified-agent-identity asset checkout not present on this machine; raw 21/21 output archived in evidence/evaluations/.",
+        "optional --skills-dir scan: full 113-skill scan needs an external skill collection on disk."
+      ],
+      "exitCodeConvention": "Exits 0 when no check is FAIL; SKIP lines are never counted as PASS."
+    },
+    "evidenceFilesArchived": 5,
+    "evidenceFiles": [
+      "evidence/evaluations/silent-failure-catalog_evaluation_v1.md",
+      "evidence/evaluations/verified-agent-identity_evaluation_v2.md",
+      "evidence/reverification/silent-failure-catalog_second-round_independent_reverification.txt",
+      "evidence/tools/matrix_test.py",
+      "evidence/tools/scan-skills-ai-readiness.py"
+    ],
+    "sourcePath": "verify/run_verify.py; verify/HOW_TO_VERIFY.md",
+    "verifiedBy": "Executed 2026-10-16 from verify/; raw stdout recorded, TOTAL line read as PASS=9 FAIL=0 SKIP=2."
+  },
+
+  "badges": [
+    {
+      "@type": "Certification",
+      "badgeId": "BDG-0001",
+      "asset": "verified-agent-identity",
+      "certificationLevel": "LGD-2 full certification",
+      "result": "21/21 tests PASS; two independent rounds agree; zero S0/S1 defects; ISO/IEC 25010 eight attributes all pass; theory coverage matrix 8/8 lines PASS.",
+      "issuedDate": "2026-10-16",
+      "sourcePath": "gates/badges.md; evidence/evaluations/verified-agent-identity_evaluation_v2.md; driver evidence/tools/matrix_test.py",
+      "verifiedBy": "Read 2026-10-16, badges.md issuance table row 1."
+    },
+    {
+      "@type": "Certification",
+      "badgeId": "BDG-0002",
+      "asset": "silent-failure-catalog (governance toolchain)",
+      "certificationLevel": "LGD-2 full certification with adversarial self-justification (mutation testing)",
+      "result": "First round: toolchain 10/10 checks PASS. Second-round independent reverification: 12 of 13 scripts exit code 0; the single non-zero exit (gate-lint = 1) is the disclosed expected false-positive channel, not a defect. Reproduced values: 14 catalog entries, 21 gates, 38/38 defect closure, mutation score 1.000 (one disclosed equivalent mutant), dimension mutants killed plus 8 load-bearing negative controls.",
+      "externalTimestamp": {"archivedDOI": "10.5281/zenodo.23301091", "conceptDOI": "10.5281/zenodo.23051637", "releaseVersion": "v0.1.3"},
+      "issuedDate": "2026-10-16",
+      "sourcePath": "gates/badges.md; evidence/evaluations/silent-failure-catalog_evaluation_v1.md; evidence/reverification/silent-failure-catalog_second-round_independent_reverification.txt",
+      "verifiedBy": "Read 2026-10-16, badges.md row 2 and reverification summary table."
+    }
+  ],
+
+  "badgeProgram": {
+    "@type": "CreativeWork",
+    "name": "LGD badge program",
+    "levels": [
+      {"level": "LGD-1", "content": "Function + usability + exception paths (matrix A-D/F)."},
+      {"level": "LGD-2", "content": "L1 plus all eight ISO/IEC 25010 attributes plus security batch plus mutation self-justification."},
+      {"level": "LGD-3", "content": "L2 plus independent double-agent cross-review plus annual surveillance."}
+    ],
+    "validity": "One year; re-evaluation triggered by major asset changes.",
+    "sourcePath": "gates/badge_program.md",
+    "verifiedBy": "Read 2026-10-16."
+  }
+}

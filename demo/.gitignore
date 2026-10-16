@@ -1,0 +1,6 @@
+# Internal working files of the demo pipeline — not for the public repository.
+# The public demo is only: lgd-ai-autonomy-and-pluggability.html + evidence.jsonld
+_build_spec.md
+_evidence_bundle.md
+_verification_report.md
+_shots/
