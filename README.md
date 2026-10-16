@@ -58,9 +58,85 @@ Full text in `AGENTS.md`. In short:
 
 ## License
 
-**Status: TBD.** The intended license for this repository's documentation and reproducibility scripts is CC BY 4.0. No `LICENSE` file has been committed yet; until one is added, treat all content as All Rights Reserved. Do not reuse the "LGD-evaluated" badge mark outside the cited reports.
+This repository is licensed under the **MIT License** (see the `LICENSE` file; Copyright (c) 2026 Zhao Xinghua (Steven Zhao)). Do not reuse the "LGD-evaluated" badge mark outside the cited reports.
 
 ## Signatories
 
 - **Steven Zhao** — Independent Researcher
 - **SynomosAI** — unregistered entity (not a registered organization; this repository is a personal demonstration, not a statement by any legal entity)
+
+## Demo
+- demo/lgd-ai-autonomy-and-pluggability.html — interactive walkthrough of the AI-self-remediation closed loop and the pluggable skill-package mechanism; machine-readable evidence in demo/evidence.jsonld.
+
+---
+
+## 中文说明
+
+本仓是依据 LGD 三律章程运行的示范组织公开核验仓：仓内关于其资产的每一条对外声明，任何外部读者都可自行核对，无需信任运营者本人。
+
+### 不自证原则
+
+我们不要求您仅凭我们的一面之词。仓内每一条对外声明都由三层独立证据支撑（"三重证据"）：
+
+1. **独立评估人报告**——以局外人视角撰写、在全新复制的环境中执行、从未在资产本体上运行的评估报告（`evidence/evaluations/`、`evidence/reverification/`）。
+2. **可复现工具**——评估人实际运行过的同一批脚本归档于 `evidence/tools/`。外部读者可执行 `python verify/run_verify.py`，把打印出的数字与归档报告逐项对照。
+3. **外部机构时间戳**——提交到外部注册机构的声明带有 DOI 或等效时间戳，任何单一一方都无法倒签。已归档声明示例：`silent-failure-catalog` v0.1.3 带归档 DOI `10.5281/zenodo.23301091`（概念 DOI `10.5281/zenodo.23051637`），见 `evidence/evaluations/silent-failure-catalog_evaluation_v1.md`。诚实边界：本示范仓自身尚未申请 DOI / SWH / arXiv 存档；我们如实说明，而不是暗示已有。
+
+不具备三层证据的声明，本仓不予收录。凡是仅凭本仓无法复现的内容，我们在文中如实标注边界，而不是悄悄略去。
+
+### 目录结构
+
+| 路径 | 用途 |
+|---|---|
+| `registry/skills.md` | 公开技能注册表：113 条（SK-001..SK-113）。仅作索引；单技能调用协议随各资产本体存放。 |
+| `evidence/evaluations/` | 独立评估报告（局外人视角）。 |
+| `evidence/reverification/` | 第二轮独立复核日志：逐条命令退出码与原始输出。 |
+| `evidence/tools/` | 评估人实际运行的可复现脚本（已归档、只读）。 |
+| `gates/badge_program.md` | 门禁/徽章项目定义：通过一道门禁意味着什么。 |
+| `gates/changelog.md` | 本仓内受门禁追踪的公开对象的脱敏变更日志。 |
+| `gates/badges.md` | 公开徽章签发登记：仅收录 `evidence/` 下有文件支撑的签发。 |
+| `verify/HOW_TO_VERIFY.md` | 面向外部读者的分步核验指南。 |
+| `verify/run_verify.py` | 一键核验脚本（仅用 Python 标准库）。 |
+
+### 如何核验
+
+1. 把本仓克隆到一个全新目录。
+2. 先读本文件，再读 `verify/HOW_TO_VERIFY.md`。
+3. 运行：
+
+   ```
+   python verify/run_verify.py
+   ```
+
+4. 阅读打印出的表格。每一行都标为 `PASS`、`FAIL` 或 `SKIP`。
+5. 把文中引用的数字与源文档逐项核对（注册表条数、评估结论、复核退出码）。
+
+### 复现边界（如实说明）
+
+- **在本仓内可一键复现：** 归档工具自检（编译 + 最小执行）、注册表格式校验、证据文件完整性（存在、非空、含认证关键词）。
+- **仅凭本仓无法复现：** 完整的 113 项技能 AI 就绪度扫描与 21/21 的已验证代理身份矩阵。那需要公开技能合集与 Node.js 环境。本仓只提供注册表索引与归档证据。可选用法：
+
+  ```
+  python verify/run_verify.py --skills-dir /path/to/skills-collection
+  ```
+
+### 章程（简版）
+
+全文见 `AGENTS.md`。简言之：
+
+- **注册表（Registry）**——每项资产在使用前必须登记。
+- **证据（Evidence）**——每条声明都带证据；证据文件只读。
+- **门禁（Gates）**——任何资产在通过门禁前不得发布。
+
+### 许可证
+
+本仓采用 **MIT 许可证**（见 `LICENSE` 文件；版权所有 (c) 2026 赵兴华（Steven Zhao））。请勿在所引报告之外使用 "LGD-evaluated" 徽章标识。
+
+### 署名
+
+- **Steven Zhao（赵兴华）**——独立研究者
+- **SynomosAI**——未注册实体（本仓为个人示范，不代表任何法律实体的立场）
+
+### 演示
+
+- `demo/lgd-ai-autonomy-and-pluggability.html`——AI 自我修复闭环与可插拔技能包机制的交互式走读；机器可读证据见 `demo/evidence.jsonld`。

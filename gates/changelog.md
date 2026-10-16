@@ -13,6 +13,7 @@ are kept outside this public file.
 | 2026-10-16 | Repository skeleton created: directories `registry/`, `evidence/{evaluations,reverification,tools}`, `gates/`, `verify/`, with the public skill registry index (SK-001..SK-113). | `registry/skills.md` |
 | 2026-10-16 | Evidence vendored into the repository: two independent evaluation reports (`verified-agent-identity` v2.1, `silent-failure-catalog` v1.1), one second-round independent reverification log, and the two reproducibility driver scripts the evaluator ran. | `evidence/` tree |
 | 2026-10-16 | Public documentation completed: repository `README.md`, the `AGENTS.md` constitution, this changelog, the public badge register (`gates/badges.md`), the outsider verification guide (`verify/HOW_TO_VERIFY.md`), and the one-command verification script (`verify/run_verify.py`). | Repository root and `verify/` |
+| 2026-10-16 | `README.md` bilingual completion (full Chinese section added after the full English section) and the License statement corrected to match the committed `LICENSE` file (MIT, Copyright (c) 2026 Zhao Xinghua); the earlier "no LICENSE file committed / All Rights Reserved" note was stale. | Committed `LICENSE` file; bilingual delivery requirement |
 
 ## Gate-tracked public objects
 
