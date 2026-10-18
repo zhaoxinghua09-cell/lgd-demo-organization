@@ -1,6 +1,26 @@
 # LGD Demo Organization — Public Verification Repository
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Python 3 stdlib](https://img.shields.io/badge/Python-3%20standard%20library-blue.svg)](verify/run_verify.py)
+[![Evidence: triple](https://img.shields.io/badge/evidence-triple%20evidence-2ea44f.svg)](evidence/)
+[![AI-friendly](https://img.shields.io/badge/AI--friendly-llms.txt-101E2C.svg)](llms.txt)
+[![Bilingual](https://img.shields.io/badge/i18n-English%20%7C%20中文-brightgreen.svg)](#-中文说明)
+
 A demonstration organization operated under the LGD three-law constitution. This repository is the publicly verifiable sample: the claims it makes about its assets can be checked by any outside reader, without trusting the operator.
+
+## Quick Start / 快速开始
+
+Verify this public sample yourself — only Python 3 (standard library), no install of third-party packages.
+
+```bash
+git clone https://github.com/zhaoxinghua09-cell/lgd-demo-organization.git
+cd lgd-demo-organization
+python verify/run_verify.py
+```
+
+Read the printed table: every line is marked `PASS`, `FAIL`, or `SKIP`. Cross-check the cited numbers against the source documents (registry row count, evaluation verdicts, reverification exit codes). The full step-by-step guide lives in [`verify/HOW_TO_VERIFY.md`](verify/HOW_TO_VERIFY.md).
+
+快速开始：克隆本仓后运行 `python verify/run_verify.py`，即可在本机一键核验；仅使用 Python 标准库，无需安装任何第三方依赖。
 
 ## The no-self-certification policy
 

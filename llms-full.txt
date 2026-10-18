@@ -1,0 +1,75 @@
+# LGD Demo Organization (lgd-demo-organization) — Full Text
+
+This is the "full" companion to llms.txt, for long-context models that read the whole
+repository description at once.
+
+## What this is
+
+A demonstration organization operated under the LGD three-law constitution
+(Registry, Evidence, Gates). This repository is the publicly verifiable sample:
+the claims it makes about its assets can be checked by any outside reader, without
+trusting the operator.
+
+One sentence: an open-source governance sample where every external claim carries
+triple evidence, and a stranger can re-run the verification on a fresh clone.
+
+## What problem it solves
+
+1. You do not want to trust an operator's word about their own quality claims.
+2. You want to independently re-run the checks behind a claim, not just read them.
+3. You want a worked example of a "no self-certification" governance policy.
+
+## The no-self-certification policy
+
+Every external-facing claim is backed by three independent evidence layers:
+
+1. Independent evaluator reports — written from an outsider's perspective, run on a
+   freshly copied environment, never on the asset itself (`evidence/evaluations/`,
+   `evidence/reverification/`).
+2. Reproducible tooling — the same scripts the evaluator ran are archived under
+   `evidence/tools/`; an outside reader can execute them and compare numbers.
+3. External institutional time-stamps — claims deposited with an external registry
+   carry a DOI or equivalent time-stamp no single party can backdate.
+
+Honest boundary: this demonstration repository itself has not yet received a
+DOI / SWH / arXiv deposit; the README says so rather than implying one.
+
+## Quick start
+
+```bash
+git clone https://github.com/zhaoxinghua09-cell/lgd-demo-organization.git
+cd lgd-demo-organization
+python verify/run_verify.py
+```
+
+Read the printed table (PASS / FAIL / SKIP) and cross-check the cited numbers
+against the source documents. Optional, with an external skills collection:
+
+```bash
+python verify/run_verify.py --skills-dir /path/to/skills-collection
+```
+
+## Trigger words
+
+public verification / triple evidence / independent evaluation / reproducible
+verification / governance sample / no self-certification / outsider re-check /
+badge issuance register / gate-tracked release.
+
+## Reproduction boundary
+
+- Reproducible in one click inside this repository: archived tool self-checks,
+  registry format validation, evidence-file integrity (existence, non-empty,
+  certification keywords).
+- Not reproducible from this repository alone: the full 113-skill AI-readiness
+  scan and the 21/21 verified-agent-identity matrix. Those require the public
+  skill collection and a Node.js environment.
+
+## License & rights
+
+MIT. Copyright (c) 2026 Zhao Xinghua (Steven Zhao). Do not reuse the
+"LGD-evaluated" badge mark outside the cited reports. Full terms in `LICENSE`.
+
+## Links
+
+- Repo: https://github.com/zhaoxinghua09-cell/lgd-demo-organization
+- Contact: zhaoxinghua09@gmail.com ｜ ORCID 0009-0001-0512-1237

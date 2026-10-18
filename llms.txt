@@ -1,0 +1,26 @@
+# LGD Demo Organization (lgd-demo-organization)
+
+> A publicly verifiable demonstration organization run under the LGD three-law constitution (Registry, Evidence, Gates). Every external claim is backed by independent evaluator reports, reproducible tooling, and external institutional time-stamps — no self-certification.
+
+This repository is the verifiable sample, not a product. An outside reader can re-run the archived verification script and compare the printed numbers against the archived reports, without trusting the operator.
+
+## Core
+
+- [README.md](https://github.com/zhaoxinghua09-cell/lgd-demo-organization/blob/master/README.md): project description, quick start, bilingual EN / 中文
+- [AGENTS.md](https://github.com/zhaoxinghua09-cell/lgd-demo-organization/blob/master/AGENTS.md): the three-law constitution and change-trace rules
+- [verify/run_verify.py](https://github.com/zhaoxinghua09-cell/lgd-demo-organization/blob/master/verify/run_verify.py): one-click outsider verification (Python standard library only)
+- [verify/HOW_TO_VERIFY.md](https://github.com/zhaoxinghua09-cell/lgd-demo-organization/blob/master/verify/HOW_TO_VERIFY.md): step-by-step verification guide
+
+## Reference
+
+- [registry/skills.md](https://github.com/zhaoxinghua09-cell/lgd-demo-organization/blob/master/registry/skills.md): public skill registry, 113 entries (SK-001..SK-113), index only
+- [evidence/evaluations/](https://github.com/zhaoxinghua09-cell/lgd-demo-organization/tree/master/evidence/evaluations): independent evaluation reports (outsider perspective)
+- [evidence/reverification/](https://github.com/zhaoxinghua09-cell/lgd-demo-organization/tree/master/evidence/reverification): second-round reverification logs
+- [gates/badges.md](https://github.com/zhaoxinghua09-cell/lgd-demo-organization/blob/master/gates/badges.md): badge issuance register, only entries backed by evidence files
+
+## Optional
+
+- [SECURITY.md](https://github.com/zhaoxinghua09-cell/lgd-demo-organization/blob/master/SECURITY.md): security policy mapped to the three laws
+- [CONTRIBUTING.md](https://github.com/zhaoxinghua09-cell/lgd-demo-organization/blob/master/CONTRIBUTING.md): change-trace and evidence requirements
+- [llms-full.txt](https://github.com/zhaoxinghua09-cell/lgd-demo-organization/blob/master/llms-full.txt): full text for long-context models
+- [LICENSE](https://github.com/zhaoxinghua09-cell/lgd-demo-organization/blob/master/LICENSE): MIT
