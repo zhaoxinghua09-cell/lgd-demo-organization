@@ -78,7 +78,7 @@ Full text in `AGENTS.md`. In short:
 
 ## License
 
-This repository is licensed under the **MIT License** (see the `LICENSE` file; Copyright (c) 2026 Zhao Xinghua (Steven Zhao)). Do not reuse the "LGD-evaluated" badge mark outside the cited reports.
+This repository code is licensed under the **MIT License** (see the `LICENSE` file). © 2026 赵兴华 / Steven Zhao (ORCID 0009-0001-0512-1237). All rights reserved. Do not reuse the "LGD-evaluated" badge mark outside the cited reports.
 
 ## Signatories
 
@@ -150,11 +150,13 @@ This repository is licensed under the **MIT License** (see the `LICENSE` file; C
 
 ### 许可证
 
-本仓采用 **MIT 许可证**（见 `LICENSE` 文件；版权所有 (c) 2026 赵兴华（Steven Zhao））。请勿在所引报告之外使用 "LGD-evaluated" 徽章标识。
+本仓代码采用 **MIT 许可证**（见 `LICENSE` 文件）。
+© 2026 赵兴华 / Steven Zhao (ORCID 0009-0001-0512-1237). All rights reserved.
+请勿在所引报告之外使用 "LGD-evaluated" 徽章标识。
 
 ### 署名
 
-- **Steven Zhao（赵兴华）**——独立研究者
+- **作者**：赵兴华 / Steven Zhao（独立研究者，ORCID 0009-0001-0512-1237）
 - **SynomosAI**——未注册实体（本仓为个人示范，不代表任何法律实体的立场）
 
 ### 演示
